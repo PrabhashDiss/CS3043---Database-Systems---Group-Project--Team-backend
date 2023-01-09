@@ -28,38 +28,38 @@ app.use('/api/getCustomerInfo',authorizeRoles(['customer', 'admin']), (req, res)
   get_customer_info(req, res)
 })
 
-app.post('/addAccount', (req, res) => {
+app.post('/addAccount',authorizeRoles(['customer']), (req, res) => {
   add_account(req, res)
 })
-app.get('/getFD', (req, res) => {
+app.get('/getFD',authorizeRoles(['admin']), (req, res) => {
   get_fd(req, res)
 })
 
-app.get('/getEmployee', (req, res) => {
+app.get('/getEmployee',authorizeRoles(['admin']), (req, res) => {
   get_employee(req, res)
 })
-app.post('/addEmployee', (req, res) => {
+app.post('/addEmployee',authorizeRoles(['admin']), (req, res) => {
   add_employee(req, res)
 })
 
-app.post('/addLoan', (req, res) => {
+app.post('/addLoan',authorizeRoles(['customer', 'admin']), (req, res) => {
   add_loan(req, res)
 })
-app.get('/api/getEligibleLoanAccounts', (req, res) => {
+app.get('/api/getEligibleLoanAccounts',authorizeRoles(['customer']), (req, res) => {
   get_eligible_loan_accounts(req, res)
 })
-app.post('/approveLoan', (req, res) => {
+app.post('/approveLoan',authorizeRoles(['admin']), (req, res) => {
   approve_loan(req, res)
 })
 
-app.post('/addLoanPayment', (req, res) => {
+app.post('/addLoanPayment',authorizeRoles(['customer']), (req, res) => {
   add_loan_payment(req, res)
 })
-app.get('/getLoanPayment', (req, res) => {
+app.get('/getLoanPayment',authorizeRoles(['customer']), (req, res) => {
   get_loan_payment(req, res)
 })
 
-app.post('/addTransaction', (req, res) => {
+app.post('/addTransaction',authorizeRoles(['customer']), (req, res) => {
   add_transaction(req, res)
 })
 
