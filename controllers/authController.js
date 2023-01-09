@@ -1,29 +1,21 @@
 const jwt = require("jsonwebtoken");
 
-const users = [
-  {
-    email: "sandev",
-    password: "123",
-    role: "customer",
-  },
-  {
-    email: "admin",
-    password: "123",
-    role: "admin",
-  },
-];
-
 const login_post = (req, res, next) => {
-  const { email, password } = req.body;
+  const users = query(
+    `select user,password,role
+     from users
+     where user = '${req.body.user_is}' and password = '${req.body.password}';`)
 
-  const user = users.find((u) => u.email === email && u.password === password);
+  const { user, password } = req.body;
 
-  if (!user) {
+  const User = users.find((u) => u.rows[0].user === user && u.rows[0].password === password);
+
+  if (!User) {
     return res.status(401).send({ message: "Invalid email or password" });
   }
 
   const token = jwt.sign(
-    { email: user.email, role: user.role },
+    { user: data.rows[0].user, role: data.rows[0].role },
     process.env.SECRET_KEY,
     {
       expiresIn: "1800s",
@@ -34,9 +26,11 @@ const login_post = (req, res, next) => {
 }
 
 const customer_register_post = (req, res, next) => {
-  const {city , street, name, address} = req.body;
-
-  return res.send('TODO')
+  const data = query(
+    `insert into users values ('${req.body.user}','${req.body.password}','${req.body.role}');`)
+    .then((rows) => {
+         return res.send(rows)
+    })
 }
 
 module.exports = {
