@@ -28,6 +28,9 @@ app.use('/api/getCustomerInfo',authorizeRoles(['customer', 'admin']), (req, res)
   get_customer_info(req, res)
 })
 
+app.get('/getAccount',authorizeRoles(['customer']), (req, res) => {
+  get_account(req, res)
+})
 app.post('/addAccount',authorizeRoles(['customer']), (req, res) => {
   add_account(req, res)
 })
