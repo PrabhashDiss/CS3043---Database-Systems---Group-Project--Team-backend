@@ -81,7 +81,7 @@ const get_transaction_latest = (req, res, next) => {
     const data = query(
         `select transaction_id, account_number_from, transaction_description, amount, execution_branch_code, transaction_timestamp, account_number_to
          from transaction
-         where account_number_from = "${req.body.account_number_from}"
+         where account_number_from = "${req.query.account_number_from}"
          order by transaction_timestamp desc
          limit 6`)
         .then((rows) => {
