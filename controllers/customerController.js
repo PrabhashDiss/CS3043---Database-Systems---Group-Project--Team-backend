@@ -27,8 +27,8 @@ const add_account = (req, res, next) => {
         })
     */
     const data = query(
-        `INSERT INTO account(account_number, customer_id, branch_code, account_type_id, balance, last_active_date, open_date)
-         VALUES'(${req.body.account_number}', '${req.body.customer_id}', '${req.body.branch_code}', '${req.body.account_type_id}', ${req.body.balance}, '${req.body.last_active_date}', '${req.body.open_date}');`)
+        `INSERT INTO account(account_number, customer_id, branch_code, account_type_id, balance, last_active_date, open_date) \
+         VALUES('${req.body.account_number}', '${req.body.customer_id}', '${req.body.branch_code}', '${req.body.account_type_id}', ${req.body.balance}, '${req.body.last_active_date}', '${req.body.open_date}');`)
         .then((rows) => {
                 return res.send({ success: true })
         })
@@ -76,6 +76,15 @@ const get_loan_payment = (req, res, next) => {
         })
 }
 
+const get_transaction = (req, res, next) => {
+    const data = query(
+        `select transaction_id, account_number_from, transaction_description, amount, execution_branch_code, transaction_timestamp, account_number_to
+         from transaction
+         where account_number_from = '${req.body.account_number_from}'`)
+        .then((rows) => {
+             return res.send(rows)
+        })
+}
 const add_transaction = (req, res, next) => {
     let time = req.body.transaction_timestamp
     time = time.replaceAll(': ', ':')
@@ -94,5 +103,5 @@ const add_transaction = (req, res, next) => {
 }
 
 module.exports = {
-    get_customer_info, get_account, add_account, add_loan_payment, get_loan_payment, add_transaction, get_eligible_loan_accounts
+    get_customer_info, get_account, add_account, add_loan_payment, get_loan_payment, get_transaction, add_transaction, get_eligible_loan_accounts
 }
