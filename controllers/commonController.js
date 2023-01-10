@@ -20,8 +20,8 @@ const add_loan = (req, res, next) => {
         })
     */
     const data = query(
-        `INSERT INTO loan(loan_number, branch_code, amount, loan_type_id, loan_duration, interest_rate, start_date, due_date, is_personal, is_online, loan_status)
-         VALUES('${req.body.loan_number}', '${req.body.branch_code}', ${req.body.amount}, '${req.body.loan_type_id}', ${req.body.loan_duration}, ${req.body.interest_rate}, '${req.body.start_date}', '${req.body.due_date}', ${req.body.is_personal}, ${req.body.is_online}, ${req.body.loan_status});`)
+        `INSERT INTO loan(loan_number, branch_code, amount, loan_type_id, loan_duration, start_date, due_date, is_personal, is_online, loan_status, is_approved)
+         VALUES('${req.body.loan_number}', '${req.body.branch_code}', ${req.body.amount}, '${req.body.loan_type_id}', ${req.body.loan_duration}, '${req.body.start_date}', '${req.body.due_date}', ${req.body.is_personal}, ${req.body.is_online}, ${req.body.loan_status}, ${req.body.is_approved});`)
         .then((rows) => {
                 return res.send({ success: true })
         })
