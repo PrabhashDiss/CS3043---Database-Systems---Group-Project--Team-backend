@@ -8,6 +8,13 @@ const get_customer_info = (req, res, next) => {
         })
 }
 
+const get_account = (req, res, next) => {
+    const data = query(
+        `select * from account where customer_id = '${req.query.user}';`)
+        .then((rows) => {
+             return res.send(rows)
+        })
+}
 const add_account = (req, res, next) => {
     let account = req.body;
     var sql = "SET @AccountNumber = ?;SET @CustomerID = ?;SET @BranchCode = ?;SET @AccountTypeID = ?;SET @Balance = ?;SET @LastActiveDate = ?;SET @OpenDate = ?; \
@@ -63,5 +70,5 @@ const add_transaction = (req, res, next) => {
 }
 
 module.exports = {
-    get_customer_info, add_account, add_loan_payment, get_loan_payment, add_transaction, get_eligible_loan_accounts
+    get_customer_info, get_account, add_account, add_loan_payment, get_loan_payment, add_transaction, get_eligible_loan_accounts
 }
