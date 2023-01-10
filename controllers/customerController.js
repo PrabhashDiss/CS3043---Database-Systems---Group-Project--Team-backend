@@ -53,19 +53,13 @@ const get_loan_payment = (req, res, next) => {
 }
 
 const add_transaction = (req, res, next) => {
-    let transaction = req.body;
-    var sql = "SET @TransactionID = ?;SET @AccountNumberTo = ?;SET @AccountNumberFrom = ?;SET @TransactionDescription = ?;SET @Amount = ?;SET @TransactionTimestamp = ?;SET @ExecutionBranchCode = ?; \
-    CALL TransactionAdd(@TransactionID,@AccountNumberTo,@AccountNumberFrom,@TransactionDescription,@Amount,@TransactionTimestamp,@ExecutionBranchCode);"
     const data = query(
-        sql,[transaction.transaction_id, transaction.account_number_to, transaction.account_number_from, transaction.transaction_description, transaction.amount, transaction.transaction_timestamp, transaction.execution_branch_code])
+        `INSERT INTO transaction(transaction_id, account_number_to, account_number_from, transaction_description, amount, execution_branch_code, transaction_timestamp)
+         VALUES('${req.body.transaction_id}', '${req.body.account_number_to}', '${req.body.account_number_from}', '${req.body.transaction_description}', ${req.body.amount}, '${req.body.execution_branch_code}', '${req.body.transaction_timestamp}');
+         update account set balance = balance - ${parseFloat(req.body.amount)} where account_number = '${req.body.account_number_from}';
+         update account set balance = balance + ${parseFloat(req.body.amount)} where account_number = '${req.body.account_number_to}';`)
         .then((rows) => {
              return res.send(rows)
-        })
-    data = query(
-        `update account set balance = balance - '${req.body.amount}' where account_number = '${req.body.account_number_from}'; \
-         update account set balance = balance + '${req.body.amount}' where account_number = '${req.body.account_number_to}';`)
-        .then((rows) => {
-                return res.send(rows)
         })
 }
 
