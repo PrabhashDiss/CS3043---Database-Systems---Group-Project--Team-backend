@@ -43,6 +43,7 @@ const get_eligible_loan_accounts = (req, res, next) => {
 }
 
 const add_loan_payment = (req, res, next) => {
+    /*
     let loan_payment = req.body;
     var sql = "SET @PaymentID = ?;SET @LoanNumber = ?;SET @PaymentReferenceNumber = ?;SET @PaymentDate = ?;SET @PaymentAmount = ?;SET @PaymentStatus = ?;SET @Remarks = ?; \
     CALL LoanPaymentAdd(@PaymentID,@LoanNumber,@PaymentReferenceNumber,@PaymentDate,@PaymentAmount,@PaymentStatus,@Remarks);"
@@ -50,6 +51,13 @@ const add_loan_payment = (req, res, next) => {
         sql,[loan_payment.payment_id, loan_payment.loan_number, loan_payment.payment_reference_number, loan_payment.payment_date, loan_payment.payment_amount, loan_payment.payment_status, loan_payment.remarks])
         .then((rows) => {
              return res.send(rows)
+        })
+    */
+    const data = query(
+        `INSERT INTO loan_payment(loan_number, payment_id, payment_reference_number, payment_date, payment_amount, proof_of_payment, payment_status, remarks)
+         VALUES('${req.body.loan_number}', '${req.body.payment_id}', '${req.body.payment_reference_number}', '${req.body.payment_date}', ${req.body.payment_amount}, '${req.body.proof_of_payment}', '${req.body.payment_status}', '${req.body.remarks}');`)
+        .then((rows) => {
+                return res.send(rows)
         })
 }
 const get_loan_payment = (req, res, next) => {
