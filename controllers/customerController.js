@@ -16,6 +16,7 @@ const get_account = (req, res, next) => {
         })
 }
 const add_account = (req, res, next) => {
+    /*
     let account = req.body;
     var sql = "SET @AccountNumber = ?;SET @CustomerID = ?;SET @BranchCode = ?;SET @AccountTypeID = ?;SET @Balance = ?;SET @LastActiveDate = ?;SET @OpenDate = ?; \
     CALL AccountAdd(@AccountNumber,@CustomerID,@BranchCode,@AccountTypeID,@Balance,@LastActiveDate,@OpenDate);"
@@ -23,6 +24,13 @@ const add_account = (req, res, next) => {
         sql,[account.account_number, account.customer_id, account.branch_code, account.account_type_id, parseFloat(account.balance), account.last_active_date, account.open_date])
         .then((rows) => {
              return res.send(rows)
+        })
+    */
+    const data = query(
+        `INSERT INTO account(account_number, customer_id, branch_code, account_type_id, balance, last_active_date, open_date)
+         VALUES'(${req.body.account_number}', '${req.body.customer_id}', '${req.body.branch_code}', '${req.body.account_type_id}', ${req.body.balance}, '${req.body.last_active_date}', '${req.body.open_date}');`)
+        .then((rows) => {
+                return res.send(rows)
         })
 }
 
