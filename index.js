@@ -18,6 +18,7 @@ const {
   add_account,
   add_loan_payment,
   get_loan_payment,
+  get_transaction,
   add_transaction,
   get_eligible_loan_accounts,
   get_account,
@@ -82,13 +83,16 @@ app.post("/approveLoan", authorizeRoles(["admin"]), (req, res) => {
   approve_loan(req, res);
 });
 
-app.post("/addLoanPayment", authorizeRoles(["customer"]), (req, res) => {
-  add_loan_payment(req, res);
-});
 app.get("/getLoanPayment", authorizeRoles(["customer"]), (req, res) => {
   get_loan_payment(req, res);
 });
+app.post("/addLoanPayment", authorizeRoles(["customer"]), (req, res) => {
+  add_loan_payment(req, res);
+});
 
+app.get("/getTransaction", authorizeRoles(["customer"]), (req, res) => {
+  get_transaction(req, res);
+});
 app.post("/addTransaction", authorizeRoles(["customer"]), (req, res) => {
   add_transaction(req, res);
 });
