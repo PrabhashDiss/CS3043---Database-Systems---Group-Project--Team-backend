@@ -19,6 +19,7 @@ const get_employee = (req, res, next) => {
         })
 }
 const add_employee = (req, res, next) => {
+    /*
     let employee = req.body;
     var sql = "SET @EmployeeID = ?;SET @BranchCode = ?;SET @EmployeeName = ?; \
     CALL EmployeeAdd(@EmployeeID,@BranchCode,@EmployeeName);"
@@ -26,6 +27,13 @@ const add_employee = (req, res, next) => {
         sql,[employee.employee_id, employee.branch_code, employee.employee_name])
         .then((rows) => {
              return res.send(rows)
+        })
+    */
+    const data = query(
+        `INSERT INTO employee(employee_id, branch_code, employee_name)
+         VALUES('${req.body.branch_code}', '${req.body.branch_code}', '${req.body.branch_code}');`)
+        .then((rows) => {
+                return res.send(rows)
         })
 }
 
