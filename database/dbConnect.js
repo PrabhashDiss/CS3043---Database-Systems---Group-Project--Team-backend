@@ -22,7 +22,7 @@ const query = (query) =>
             if (err) throw err;
             console.log("Connected to database.");
         });
-
+        query = query.replace('\n', ' ')
         connection.query(query, function (err, rows, fields) {
             // Call reject on error states,
             // Call resolve with results
