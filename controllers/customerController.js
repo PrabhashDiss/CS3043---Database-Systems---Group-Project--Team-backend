@@ -32,6 +32,10 @@ const add_account = (req, res, next) => {
         .then((rows) => {
                 return res.send({ success: true })
         })
+        .catch((err) => {
+            console.log(err)
+            return res.send({ success: false })
+        })
 }
 
 const get_eligible_loan_accounts = (req, res, next) => {
@@ -59,6 +63,10 @@ const add_loan_payment = (req, res, next) => {
         .then((rows) => {
                 return res.send({ success: true })
         })
+        .catch((err) => {
+            console.log(err)
+            return res.send({ success: false })
+        })
 }
 const get_loan_payment = (req, res, next) => {
     const data = query(
@@ -78,6 +86,10 @@ const add_transaction = (req, res, next) => {
          update account set balance = balance + ${parseFloat(req.body.amount)} where account_number = '${req.body.account_number_to}';`)
         .then((rows) => {
              return res.send({ success: true })
+        })
+        .catch((err) => {
+            console.log(err)
+            return res.send({ success: false })
         })
 }
 
