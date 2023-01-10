@@ -22,7 +22,7 @@ const login_post = (req, res, next) => {
           { user: User.user, role: User.role },
           process.env.SECRET_KEY,
           {
-            expiresIn: "1800s",
+            expiresIn: "180000s",
           }
       );
 
