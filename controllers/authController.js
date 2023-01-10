@@ -2,10 +2,10 @@ const jwt = require("jsonwebtoken");
 const { query } = require("../database/dbConnect");
 
 const login_post = (req, res, next) => {
+  const q = `select user,password,role from users where user = '${req.body.user_id}' and password = '${req.body.password}';`;
+
   query(
-    `select user,password,role
-     from users
-     where user = '${req.body.user_id}' and password = '${req.body.password}';`
+    `select user,password,role from users where user = '${req.body.user_id}' and password = '${req.body.password}';`
   ).then((users) => {
     const { user_id, password } = req.body;
 
