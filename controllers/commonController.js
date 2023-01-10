@@ -1,5 +1,13 @@
 const {query} = require('../database/dbConnect')
 
+const get_branch = (req, res, next) => {
+    const data = query(
+        `SELECT * FROM branch`)
+        .then((rows) => {
+             return res.send(rows)
+        })
+}
+
 const add_loan = (req, res, next) => {
     let loan = req.body;
     var sql = "SET @LoanNumber = ?;SET @BranchCode = ?;SET @LoanTypeID = ?;SET @LoanDuration = ?;SET @InterestRate = ?;SET @StartDate = ?;SET @DueDate = ?;SET @IsPersonal = ?;SET @IsOnline = ?; \
@@ -12,5 +20,5 @@ const add_loan = (req, res, next) => {
 }
 
 module.exports = {
-    add_loan
+    get_branch, add_loan
 }
