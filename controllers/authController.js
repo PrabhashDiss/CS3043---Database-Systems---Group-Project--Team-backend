@@ -26,7 +26,7 @@ const login_post = (req, res, next) => {
           }
       );
 
-      return res.status(200).send({ success: true, token: token });
+      return res.status(200).send({ success: true, token: token, user: User.user, role: User.role });
     });
   } catch (e) {
     return res.send(e.message)
