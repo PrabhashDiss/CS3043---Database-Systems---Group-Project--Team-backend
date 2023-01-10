@@ -11,7 +11,7 @@ const get_customer_info = (req, res, next) => {
 
 const get_account = (req, res, next) => {
     const data = query(
-        `select * from account where customer_id = '${req.body.user}';`)
+        `select * from account where customer_id = '${req.query.user}';`)
         .then((rows) => {
             return res.send(rows)
         })
