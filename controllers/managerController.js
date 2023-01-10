@@ -43,6 +43,10 @@ const approve_loan = (req, res, next) => {
         .then((rows) => {
              return res.send({ success: true })
         })
+        .catch((err) => {
+            console.log(err)
+            return res.send({ success: false })
+        })
 }
 
 module.exports = {
