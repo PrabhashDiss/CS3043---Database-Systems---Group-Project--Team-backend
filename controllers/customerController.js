@@ -30,7 +30,7 @@ const add_account = (req, res, next) => {
         `INSERT INTO account(account_number, customer_id, branch_code, account_type_id, balance, last_active_date, open_date)
          VALUES'(${req.body.account_number}', '${req.body.customer_id}', '${req.body.branch_code}', '${req.body.account_type_id}', ${req.body.balance}, '${req.body.last_active_date}', '${req.body.open_date}');`)
         .then((rows) => {
-                return res.send(rows)
+                return res.send({ success: true })
         })
 }
 
@@ -57,7 +57,7 @@ const add_loan_payment = (req, res, next) => {
         `INSERT INTO loan_payment(loan_number, payment_id, payment_reference_number, payment_date, payment_amount, proof_of_payment, payment_status, remarks)
          VALUES('${req.body.loan_number}', '${req.body.payment_id}', '${req.body.payment_reference_number}', '${req.body.payment_date}', ${req.body.payment_amount}, '${req.body.proof_of_payment}', '${req.body.payment_status}', '${req.body.remarks}');`)
         .then((rows) => {
-                return res.send(rows)
+                return res.send({ success: true })
         })
 }
 const get_loan_payment = (req, res, next) => {
