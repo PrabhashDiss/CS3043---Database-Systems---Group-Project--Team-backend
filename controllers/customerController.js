@@ -75,7 +75,7 @@ const add_transaction = (req, res, next) => {
          update account set balance = balance - ${parseFloat(req.body.amount)} where account_number = '${req.body.account_number_from}'; \
          update account set balance = balance + ${parseFloat(req.body.amount)} where account_number = '${req.body.account_number_to}';`)
         .then((rows) => {
-             return res.send(rows)
+             return res.send({ success: true })
         })
 }
 
