@@ -2,31 +2,35 @@ const jwt = require("jsonwebtoken");
 const { query } = require("../database/dbConnect");
 
 const login_post = (req, res, next) => {
-  const q = `select user,password,role from users where user = '${req.body.user_id}' and password = '${req.body.password}';`;
+  try {
+    const q = `select user,password,role from users where user = '${req.body.user_id}' and password = '${req.body.password}';`;
 
-  query(
-    `select user,password,role from users where user = '${req.body.user_id}' and password = '${req.body.password}';`
-  ).then((users) => {
-    const { user_id, password } = req.body;
+    query(
+        `select user,password,role from users where user = '${req.body.user_id}' and password = '${req.body.password}';`
+    ).then((users) => {
+      const { user_id, password } = req.body;
 
-    const User = users.find(
-      (u) => u.rows[0].user === user_id && u.rows[0].password === password
-    );
+      const User = users.find(
+          (u) => u.user === user_id && u.password === password
+      );
 
-    if (!User) {
-      return res.status(401).send({ message: "Invalid email or password" });
-    }
-
-    const token = jwt.sign(
-      { user: data.rows[0].user, role: data.rows[0].role },
-      process.env.SECRET_KEY,
-      {
-        expiresIn: "1800s",
+      if (!User) {
+        return res.status(401).send({ message: "Invalid email or password" });
       }
-    );
 
-    return res.status(200).send({ success: true, token: token });
-  });
+      const token = jwt.sign(
+          { user: User.user, role: User.role },
+          process.env.SECRET_KEY,
+          {
+            expiresIn: "1800s",
+          }
+      );
+
+      return res.status(200).send({ success: true, token: token });
+    });
+  } catch (e) {
+    return res.send(e.message)
+  }
 };
 
 const customer_register_post = (req, res, next) => {
