@@ -11,7 +11,7 @@ const {authorizeRoles} = require('./middleware/middlewares')
 // controllers
 const {login_post, customer_register_post} = require('./controllers/authController')
 const {get_customer_info, add_account, add_loan_payment, get_loan_payment, add_transaction, get_eligible_loan_accounts} = require('./controllers/customerController')
-const {add_loan} = require('./controllers/commonController')
+const {add_loan, get_branch} = require('./controllers/commonController')
 const {get_fd, get_employee, add_employee, approve_loan} = require('./controllers/managerController')
 
 
@@ -26,6 +26,10 @@ app.use('/api/customerRegister', (req, res) => {
 
 app.use('/api/getCustomerInfo',authorizeRoles(['customer', 'admin']), (req, res) => {
   get_customer_info(req, res)
+})
+
+app.get('/getBranch', (req, res) => {
+  get_branch(req, res)
 })
 
 app.get('/getAccount',authorizeRoles(['customer']), (req, res) => {
