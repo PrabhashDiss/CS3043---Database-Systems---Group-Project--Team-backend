@@ -33,7 +33,7 @@ const add_employee = (req, res, next) => {
         `INSERT INTO employee(employee_id, branch_code, employee_name)
          VALUES('${req.body.branch_code}', '${req.body.branch_code}', '${req.body.branch_code}');`)
         .then((rows) => {
-                return res.send(rows)
+                return res.send({ success: true })
         })
 }
 
@@ -41,7 +41,7 @@ const approve_loan = (req, res, next) => {
     const data = query(
         `update loan set is_approved = 1 where loan_number = '${req.query.loan_number}'`)
         .then((rows) => {
-             return res.send(rows)
+             return res.send({ success: true })
         })
 }
 
