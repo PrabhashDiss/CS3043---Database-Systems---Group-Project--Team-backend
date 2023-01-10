@@ -74,7 +74,7 @@ app.post("/addLoan", authorizeRoles(["customer", "admin"]), (req, res) => {
     add_loan(req, res);
 });
 app.get(
-    "/api/getEligibleLoanAccounts",
+    "/getEligibleLoanAccounts",
     authorizeRoles(["customer"]),
     (req, res) => {
         get_eligible_loan_accounts(req, res);
