@@ -21,6 +21,8 @@ const {
   add_transaction,
   get_eligible_loan_accounts,
   get_account,
+  get_transaction,
+  get_transaction_latest,
 } = require("./controllers/customerController");
 const {add_loan, get_branch} = require("./controllers/commonController");
 const {
@@ -90,6 +92,13 @@ app.post("/addLoanPayment", authorizeRoles(["customer"]), (req, res) => {
 });
 app.get("/getLoanPayment", authorizeRoles(["customer"]), (req, res) => {
   get_loan_payment(req, res);
+});
+
+app.get("/getTransaction", authorizeRoles(["customer"]), (req, res) => {
+  get_transaction(req, res);
+});
+app.get("/getTransaction-Latest", authorizeRoles(["customer"]), (req, res) => {
+  get_transaction_latest(req, res);
 });
 app.post("/addTransaction", authorizeRoles(["customer"]), (req, res) => {
     add_transaction(req, res);
