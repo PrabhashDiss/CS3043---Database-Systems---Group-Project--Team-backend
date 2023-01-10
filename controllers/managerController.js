@@ -39,7 +39,7 @@ const add_employee = (req, res, next) => {
 
 const approve_loan = (req, res, next) => {
     const data = query(
-        `update loan set is_approved = 1 where loan_number = '${req.query.loan_number}'`)
+        `update loan set is_approved = 1 where loan_number = '${req.body.loan_number}'`)
         .then((rows) => {
              return res.send({ success: true })
         })
