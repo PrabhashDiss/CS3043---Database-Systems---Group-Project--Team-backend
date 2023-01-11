@@ -88,6 +88,15 @@ const get_transaction_latest = (req, res, next) => {
             return res.send(rows)
         })
 }
+const get_transaction_all = (req, res, next) => {
+    const data = query(
+        `select transaction_id, account_number_from, transaction_description, amount, execution_branch_code, transaction_timestamp, account_number_to
+         from transaction
+         order by execution_branch_code;`)
+        .then((rows) => {
+            return res.send(rows)
+        })
+}
 const get_transaction = (req, res, next) => {
     const data = query(
         `select transaction_id, account_number_from, transaction_description, amount, execution_branch_code, transaction_timestamp, account_number_to
@@ -118,5 +127,5 @@ const add_transaction = (req, res, next) => {
 }
 
 module.exports = {
-    get_customer_info, get_account, add_account, add_loan_payment, get_loan_payment, add_transaction, get_eligible_loan_accounts, get_transaction, get_transaction_latest
+    get_customer_info, get_account, add_account, add_loan_payment, get_loan_payment, add_transaction, get_eligible_loan_accounts, get_transaction, get_transaction_latest, get_transaction_all
 }
