@@ -23,6 +23,7 @@ const {
   get_account,
   get_transaction,
   get_transaction_latest,
+  get_transaction_all,
 } = require("./controllers/customerController");
 const {add_loan, get_branch} = require("./controllers/commonController");
 const {
@@ -91,6 +92,9 @@ app.post("/addLoanPayment", authorizeRoles(["customer"]), (req, res) => {
     add_loan_payment(req, res);
 });
 
+app.get("/getTransactionAll", authorizeRoles(["customer"]), (req, res) => {
+    get_transaction_all(req, res);
+  });
 app.get("/getTransaction", authorizeRoles(["customer"]), (req, res) => {
   get_transaction(req, res);
 });
