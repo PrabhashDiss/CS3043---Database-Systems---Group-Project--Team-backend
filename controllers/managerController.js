@@ -77,14 +77,14 @@ const approve_loan = (req, res, next) => {
 }
 
 const get_loan_to_be_approved = (req, res, next) => {
-    const data = query(`select customer_name, branch_city, amount, loan_type_id, loan_duration, request_date, due_date, is_personal, is_online, loan_status
+    const data = query(`select customer_name, branch_city, amount, loan_duration, request_date, due_date, is_personal, is_online, loan_status
     from 
-    (select customer_id, branch_city, amount, loan_type_id, loan_duration, request_date, due_date, is_personal, is_online, loan_status
+    (select customer_id, branch_city, amount, loan_duration, request_date, due_date, is_personal, is_online, loan_status
     from (select *
     from loan_account natural join 
-    (select loan_number, branch_city, amount, loan_type_id, loan_duration, request_date, due_date, is_personal, is_online, loan_status
+    (select loan_number, branch_city, amount, loan_duration, request_date, due_date, is_personal, is_online, loan_status
     from 
-    (select loan_number, branch_code, amount, loan_type_id, loan_duration, request_date, due_date, is_personal, is_online, loan_status
+    (select loan_number, branch_code, amount, loan_duration, request_date, due_date, is_personal, is_online, loan_status
     from loan 
     where is_approved is NULL or is_approved != 1) as k left outer join branch
     using (branch_code)) as j) as m left outer join account
