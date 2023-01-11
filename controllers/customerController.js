@@ -92,7 +92,8 @@ const get_transaction = (req, res, next) => {
     const data = query(
         `select transaction_id, account_number_from, transaction_description, amount, execution_branch_code, transaction_timestamp, account_number_to
          from transaction
-         where account_number_from = "${req.body.account_number_from}"`)
+         where account_number_from = "${req.body.account_number_from}"
+         order by execution_branch_code;`)
         .then((rows) => {
             return res.send(rows)
         })
@@ -101,16 +102,16 @@ const add_transaction = (req, res, next) => {
     let time = req.body.transaction_timestamp
     time = time.replaceAll(': ', ':')
     const data = query(
-        `INSERT INTO transaction(transaction_id, account_number_to, account_number_from, transaction_description, amount, execution_branch_code, transaction_timestamp) \
+        `START TRANSACTION; \
+         INSERT INTO transaction(transaction_id, account_number_to, account_number_from, transaction_description, amount, execution_branch_code, transaction_timestamp) \
          VALUES('${req.body.transaction_id}', '${req.body.account_number_to}', '${req.body.account_number_from}', '${req.body.transaction_description}', ${req.body.amount}, '${req.body.execution_branch_code}', '${time}'); \
          update account set balance = balance - ${parseFloat(req.body.amount)} where account_number = '${req.body.account_number_from}'; \
-         update account set balance = balance + ${parseFloat(req.body.amount)} where account_number = '${req.body.account_number_to}';`)
+         update account set balance = balance + ${parseFloat(req.body.amount)} where account_number = '${req.body.account_number_to}'; \
+         COMMIT;`)
         .then((rows) => {
-            console.log('true')
             return res.send({success: true})
         })
         .catch((err) => {
-            console.log(err)
             console.log(err)
             return res.send({success: false})
         })
