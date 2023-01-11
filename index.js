@@ -24,7 +24,7 @@ const {
   get_transaction,
   get_transaction_latest,
   get_transaction_all,
-  get_loan_payment_due,
+  get_loan_payment_due, get_loans_for_customer,
 } = require("./controllers/customerController");
 const {add_loan, get_branch} = require("./controllers/commonController");
 const {
@@ -110,7 +110,7 @@ app.post("/addTransaction", authorizeRoles(["customer"]), (req, res) => {
 });
 
 app.get('/getLoanForecast', authorizeRoles(['customer', 'manager']), (req, res) => {
-    get_loan_forecast(req, res)
+    get_loans_for_customer(req, res)
 })
 
 app.listen(process.env.PORT, () => {

@@ -2,16 +2,14 @@ const {query} = require('../database/dbConnect')
 const e = require("express");
 
 const get_customer_info = (req, res, next) => {
-    const data = query(
-        `SELECT *  FROM account a, transaction t WHERE a.account_number=t.account_number and customer_id = '${req.query.user}' ORDER BY transaction_timestamp DESC`)
+    const data = query(`SELECT *  FROM account a, transaction t WHERE a.account_number=t.account_number and customer_id = '${req.query.user}' ORDER BY transaction_timestamp DESC`)
         .then((rows) => {
             return res.send(rows)
         })
 }
 
 const get_account = (req, res, next) => {
-    const data = query(
-        `select * from account where customer_id = '${req.query.user}';`)
+    const data = query(`select * from account where customer_id = '${req.query.user}';`)
         .then((rows) => {
             return res.send(rows)
         })
@@ -27,8 +25,7 @@ const add_account = (req, res, next) => {
              return res.send(rows)
         })
     */
-    const data = query(
-        `INSERT INTO account(account_number, customer_id, branch_code, account_type_id, balance, last_active_date, open_date) \
+    const data = query(`INSERT INTO account(account_number, customer_id, branch_code, account_type_id, balance, last_active_date, open_date) \
          VALUES('${req.body.account_number}', '${req.body.customer_id}', '${req.body.branch_code}', '${req.body.account_type_id}', ${req.body.balance}, '${req.body.last_active_date}', '${req.body.open_date}');`)
         .then((rows) => {
             return res.send({success: true})
@@ -40,8 +37,7 @@ const add_account = (req, res, next) => {
 }
 
 const get_eligible_loan_accounts = (req, res, next) => {
-    const data = query(
-        `select account_number from account left outer join account_type using(account_type_id) where customer_id = '${req.query.user}' and account_type = 'saving' and balance * 0.6 < 500000;`)
+    const data = query(`select account_number from account left outer join account_type using(account_type_id) where customer_id = '${req.query.user}' and account_type = 'saving' and balance * 0.6 < 500000;`)
         .then((rows) => {
             return res.send(rows)
         })
@@ -58,8 +54,7 @@ const add_loan_payment = (req, res, next) => {
              return res.send(rows)
         })
     */
-    const data = query(
-        `INSERT INTO loan_payment(loan_number, payment_id, payment_reference_number, payment_date, payment_amount, proof_of_payment, payment_status, remarks)
+    const data = query(`INSERT INTO loan_payment(loan_number, payment_id, payment_reference_number, payment_date, payment_amount, proof_of_payment, payment_status, remarks)
          VALUES('${req.body.loan_number}', '${req.body.payment_id}', '${req.body.payment_reference_number}', '${req.body.payment_date}', ${req.body.payment_amount}, '${req.body.proof_of_payment}', '${req.body.payment_status}', '${req.body.remarks}');`)
         .then((rows) => {
             return res.send({success: true})
@@ -70,15 +65,13 @@ const add_loan_payment = (req, res, next) => {
         })
 }
 const get_loan_payment = (req, res, next) => {
-    const data = query(
-        `select loan_number,payment_amount from (select customer_id,loan_number from account natural join loan_account) as k  natural join loan_payment where customer_id = '${req.query.user}'`)
+    const data = query(`select loan_number,payment_amount from (select customer_id,loan_number from account natural join loan_account) as k  natural join loan_payment where customer_id = '${req.query.user}'`)
         .then((rows) => {
             return res.send(rows)
         })
 }
 const get_loan_payment_due = (req, res, next) => {
-    const data = query(
-        `select loan_number,count(loan_number),loan_duration,loan_duration - count(loan_number) as diff
+    const data = query(`select loan_number,count(loan_number),loan_duration,loan_duration - count(loan_number) as diff
          from loan_payment left outer join 
          (select customer_id,loan_number,loan_duration
          from loan natural join
@@ -93,8 +86,7 @@ const get_loan_payment_due = (req, res, next) => {
 }
 
 const get_transaction_latest = (req, res, next) => {
-    const data = query(
-        `select transaction_id, account_number_from, transaction_description, amount, execution_branch_code, transaction_timestamp, account_number_to
+    const data = query(`select transaction_id, account_number_from, transaction_description, amount, execution_branch_code, transaction_timestamp, account_number_to
          from transaction
          where account_number_from = "${req.query.account_number_from}"
          order by transaction_timestamp desc
@@ -104,8 +96,7 @@ const get_transaction_latest = (req, res, next) => {
         })
 }
 const get_transaction_all = (req, res, next) => {
-    const data = query(
-        `select transaction_id, account_number_from, transaction_description, amount, branch_city, transaction_timestamp, account_number_to
+    const data = query(`select transaction_id, account_number_from, transaction_description, amount, branch_city, transaction_timestamp, account_number_to
         from (select transaction_id, account_number_from, transaction_description, amount, execution_branch_code as branch_code, transaction_timestamp, account_number_to
         from transaction
         order by execution_branch_code) as k left outer join branch
@@ -115,8 +106,7 @@ const get_transaction_all = (req, res, next) => {
         })
 }
 const get_transaction = (req, res, next) => {
-    const data = query(
-        `select transaction_id, account_number_from, transaction_description, amount, execution_branch_code, transaction_timestamp, account_number_to
+    const data = query(`select transaction_id, account_number_from, transaction_description, amount, execution_branch_code, transaction_timestamp, account_number_to
          from transaction
          where account_number_from = "${req.body.account_number_from}"
          order by execution_branch_code;`)
@@ -127,8 +117,7 @@ const get_transaction = (req, res, next) => {
 const add_transaction = (req, res, next) => {
     let time = req.body.transaction_timestamp
     time = time.replaceAll(': ', ':')
-    const data = query(
-        `START TRANSACTION; \
+    const data = query(`START TRANSACTION; \
          INSERT INTO transaction(transaction_id, account_number_to, account_number_from, transaction_description, amount, execution_branch_code, transaction_timestamp) \
          VALUES('${req.body.transaction_id}', '${req.body.account_number_to}', '${req.body.account_number_from}', '${req.body.transaction_description}', ${req.body.amount}, '${req.body.execution_branch_code}', '${time}'); \
          update account set balance = balance - ${parseFloat(req.body.amount)} where account_number = '${req.body.account_number_from}'; \
@@ -143,6 +132,32 @@ const add_transaction = (req, res, next) => {
         })
 }
 
+const get_loans_for_customer = (req, res, next) => {
+    const data = query(`select round(((base_amount + (base_amount*loan.interest_rate))/loan_duration), 2) as installment,
+loan_number,branch_code, loan_duration,loan.interest_rate,base_amount,start_date,
+due_date,is_personal,is_online,
+loan_status,is_approved
+from loan inner join loan_type using(loan_type_id) where loan_number in (select loan_number from loan_account where account_number = '${req.query.user}')`)
+        .then((rows) => {
+            return res.send({success: true, data: rows})
+        })
+        .catch((err) => {
+            console.log(err)
+            return res.send({success: false})
+        })
+}
+
 module.exports = {
-    get_customer_info, get_account, add_account, add_loan_payment, get_loan_payment, add_transaction, get_eligible_loan_accounts, get_transaction, get_transaction_latest, get_transaction_all, get_loan_payment_due
+    get_customer_info,
+    get_account,
+    add_account,
+    add_loan_payment,
+    get_loan_payment,
+    add_transaction,
+    get_eligible_loan_accounts,
+    get_transaction,
+    get_transaction_latest,
+    get_transaction_all,
+    get_loan_payment_due,
+    get_loans_for_customer
 }
