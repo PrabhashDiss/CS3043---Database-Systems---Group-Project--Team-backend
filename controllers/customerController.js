@@ -108,7 +108,6 @@ const get_transaction_all = (req, res, next) => {
         `select transaction_id, account_number_from, transaction_description, amount, branch_city, transaction_timestamp, account_number_to
         from (select transaction_id, account_number_from, transaction_description, amount, execution_branch_code as branch_code, transaction_timestamp, account_number_to
         from transaction
-        where account_number_from = "${req.query.account_number_from}"
         order by execution_branch_code) as k left outer join branch
         using (branch_code)`)
         .then((rows) => {
