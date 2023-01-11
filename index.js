@@ -90,9 +90,6 @@ app.get("/getLoanPayment", authorizeRoles(["customer"]), (req, res) => {
 app.post("/addLoanPayment", authorizeRoles(["customer"]), (req, res) => {
     add_loan_payment(req, res);
 });
-app.get("/getLoanPayment", authorizeRoles(["customer"]), (req, res) => {
-  get_loan_payment(req, res);
-});
 
 app.get("/getTransaction", authorizeRoles(["customer"]), (req, res) => {
   get_transaction(req, res);
