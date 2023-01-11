@@ -37,9 +37,36 @@ const add_employee = (req, res, next) => {
         })
 }
 
+function checkTime(i) {
+    if (i < 10) {
+        i = "0" + i;
+    }
+    return i;
+}
+function startTime() {
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
+    // add a zero in front of numbers<10
+    m = checkTime(m);
+    s = checkTime(s);
+    return h + ":" + m + ":" + s;
+}
+function formatDate() {
+    var d = new Date(), month = '' + (d.getMonth() + 1), day = '' + d.getDate(), year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-') + ' ' + startTime()
+}
 const approve_loan = (req, res, next) => {
     const data = query(
-        `update loan set is_approved = 1 where loan_number = '${req.body.loan_number}'`)
+        `START TRANSACTION; \
+         update loan set is_approved = 1 where loan_number = '${req.body.loan_number}'; \
+         update loan set start_date = '${formatDate()}' where loan_number = '${req.body.loan_number}'; \
+         COMMIT;`)
         .then((rows) => {
              return res.send({ success: true })
         })
@@ -49,6 +76,29 @@ const approve_loan = (req, res, next) => {
         })
 }
 
+const get_loan_to_be_approved = (req, res, next) => {
+    const data = query(`select customer_name, branch_city, amount, loan_type_id, loan_duration, request_date, due_date, is_personal, is_online, loan_status
+    from 
+    (select customer_id, branch_city, amount, loan_type_id, loan_duration, request_date, due_date, is_personal, is_online, loan_status
+    from (select *
+    from loan_account natural join 
+    (select loan_number, branch_city, amount, loan_type_id, loan_duration, request_date, due_date, is_personal, is_online, loan_status
+    from 
+    (select loan_number, branch_code, amount, loan_type_id, loan_duration, request_date, due_date, is_personal, is_online, loan_status
+    from loan 
+    where is_approved is NULL or is_approved != 1) as k left outer join branch
+    using (branch_code)) as j) as m left outer join account
+    using (account_number)) as n left outer join customer
+    using (customer_id)`)
+        .then((rows) => {
+            return res.send({success: true, data: rows})
+        })
+        .catch((err) => {
+            console.log(err)
+            return res.send({success: false})
+        })
+}
+
 module.exports = {
-    get_fd, get_employee, add_employee, approve_loan
+    get_fd, get_employee, add_employee, approve_loan, get_loan_to_be_approved
 }
