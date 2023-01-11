@@ -24,6 +24,7 @@ const {
   get_transaction,
   get_transaction_latest,
   get_transaction_all,
+  get_loan_payment_due,
 } = require("./controllers/customerController");
 const {add_loan, get_branch} = require("./controllers/commonController");
 const {
@@ -88,6 +89,9 @@ app.post("/approveLoan", authorizeRoles(["admin"]), (req, res) => {
 app.get("/getLoanPayment", authorizeRoles(["customer"]), (req, res) => {
   get_loan_payment(req, res);
 });
+app.get("/getLoanPaymentDue", authorizeRoles(["customer"]), (req, res) => {
+    get_loan_payment_due(req, res);
+  });
 app.post("/addLoanPayment", authorizeRoles(["customer"]), (req, res) => {
     add_loan_payment(req, res);
 });
