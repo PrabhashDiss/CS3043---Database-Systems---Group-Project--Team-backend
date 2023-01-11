@@ -32,6 +32,7 @@ const {
     get_employee,
     add_employee,
     approve_loan,
+    get_loan_to_be_approved,
 } = require("./controllers/managerController");
 
 // routes
@@ -109,6 +110,9 @@ app.post("/addTransaction", authorizeRoles(["customer"]), (req, res) => {
     add_transaction(req, res);
 });
 
+app.get('/getLoanToBeApproved', authorizeRoles(['customer', 'manager']), (req, res) => {
+    get_loan_to_be_approved(req, res)
+})
 app.get('/getLoanForecast', authorizeRoles(['customer', 'manager']), (req, res) => {
     get_loans_for_customer(req, res)
 })
