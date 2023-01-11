@@ -76,6 +76,21 @@ const get_loan_payment = (req, res, next) => {
             return res.send(rows)
         })
 }
+const get_loan_payment_due = (req, res, next) => {
+    const data = query(
+        `select loan_number,count(loan_number),loan_duration,loan_duration - count(loan_number) as diff
+         from loan_payment left outer join 
+         (select customer_id,loan_number,loan_duration
+         from loan natural join
+         (select customer_id,loan_number
+         from account natural join loan_account) as j) as k
+         using (loan_number)
+         where customer_id = '${req.query.user}'
+         group by loan_number`)
+        .then((rows) => {
+            return res.send(rows)
+        })
+}
 
 const get_transaction_latest = (req, res, next) => {
     const data = query(
@@ -90,9 +105,12 @@ const get_transaction_latest = (req, res, next) => {
 }
 const get_transaction_all = (req, res, next) => {
     const data = query(
-        `select transaction_id, account_number_from, transaction_description, amount, execution_branch_code, transaction_timestamp, account_number_to
-         from transaction
-         order by execution_branch_code;`)
+        `select transaction_id, account_number_from, transaction_description, amount, branch_city, transaction_timestamp, account_number_to
+        from (select transaction_id, account_number_from, transaction_description, amount, execution_branch_code as branch_code, transaction_timestamp, account_number_to
+        from transaction
+        where account_number_from = "${req.body.account_number_from}"
+        order by execution_branch_code) as k left outer join branch
+        using (branch_code)`)
         .then((rows) => {
             return res.send(rows)
         })
@@ -127,5 +145,5 @@ const add_transaction = (req, res, next) => {
 }
 
 module.exports = {
-    get_customer_info, get_account, add_account, add_loan_payment, get_loan_payment, add_transaction, get_eligible_loan_accounts, get_transaction, get_transaction_latest, get_transaction_all
+    get_customer_info, get_account, add_account, add_loan_payment, get_loan_payment, add_transaction, get_eligible_loan_accounts, get_transaction, get_transaction_latest, get_transaction_all, get_loan_payment_due
 }
