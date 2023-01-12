@@ -21,7 +21,8 @@ const {
   add_transaction,
   get_eligible_loan_accounts,
   get_account,
-  get_transaction,
+  get_transaction_from,
+  get_transaction_to,
   get_transaction_latest,
   get_transaction_all,
   get_loan_payment_due, get_loans_for_customer,
@@ -100,10 +101,13 @@ app.post("/addLoanPayment", authorizeRoles(["customer"]), (req, res) => {
 app.get("/getTransactionAll", authorizeRoles(["customer"]), (req, res) => {
     get_transaction_all(req, res);
   });
-app.get("/getTransaction", authorizeRoles(["customer"]), (req, res) => {
-  get_transaction(req, res);
+app.get("/getTransactionFrom", authorizeRoles(["customer"]), (req, res) => {
+  get_transaction_from(req, res);
 });
-app.get("/getTransaction-Latest", authorizeRoles(["customer"]), (req, res) => {
+app.get("/getTransactionTo", authorizeRoles(["customer"]), (req, res) => {
+    get_transaction_to(req, res);
+  });
+app.get("/getTransactionLatest", authorizeRoles(["customer"]), (req, res) => {
   get_transaction_latest(req, res);
 });
 app.post("/addTransaction", authorizeRoles(["customer"]), (req, res) => {
