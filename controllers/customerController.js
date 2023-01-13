@@ -173,7 +173,7 @@ const add_transaction = (req, res, next) => {
         })
         .catch((err) => {
             console.log(err)
-            return res.send({ success: false })
+            return res.send({ success: false, error: err.sqlMessage })
         })
 }
 
