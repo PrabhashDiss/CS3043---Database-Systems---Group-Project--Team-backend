@@ -36,10 +36,10 @@ const add_account_fd = (req, res, next) => {
 const add_account_saving = (req, res, next) => {
     /*
     let account = req.body;
-    var sql = "SET @AccountNumber = ?;SET @CustomerID = ?;SET @BranchCode = ?;SET @AccountTypeID = ?;SET @Balance = ?;SET @LastActiveDate = ?;SET @OpenDate = ?; \
-    CALL AccountAdd(@AccountNumber,@CustomerID,@BranchCode,@AccountTypeID,@Balance,@LastActiveDate,@OpenDate);"
+    var sql = "SET @AccountNumber = ?;SET @CustomerID = ?;SET @BranchCode = ?;SET @AccountTypeID = ?;SET @Balance = ?;SET @OpenDate = ?;SET @IsPersonal = ?; \
+    CALL AccountAdd(@AccountNumber,@CustomerID,@BranchCode,@AccountTypeID,@Balance,@OpenDate);"
     const data = query(
-        sql,[account.account_number, account.customer_id, account.branch_code, account.account_type_id, parseFloat(account.balance), account.last_active_date, account.open_date])
+        sql,[account.account_number, account.customer_id, account.branch_code, account.account_type_id, parseFloat(account.balance), account.open_date, account.is_personal])
         .then((rows) => {
              return res.send(rows)
         })
@@ -173,14 +173,19 @@ const add_transaction = (req, res, next) => {
         })
         .catch((err) => {
             console.log(err)
-            return res.send({ success: false })
+            return res.send({ success: false, error: err.sqlMessage })
         })
 }
 
 const get_loans_for_customer = (req, res, next) => {
-    const data = query(`select round(((base_amount + (base_amount*loan_type.interest_rate))/loan_duration), 2) as installment, \
-loan_number,branch_code, loan_duration,loan_type.interest_rate,base_amount,start_date, due_date,is_personal,is_online, loan_status,is_approved \
-from loan inner join loan_type using(loan_type_id) where loan_number in (select loan_number from loan_account where account_number in (select account_number from account where customer_id = '${req.query.user}'))`)
+    const data = query(`select round(((base_amount + (base_amount*loan_type.interest_rate))/loan_duration), 2) as installment, amount, type, loan_number, branch_code, loan_duration, loan_type.interest_rate, start_date, due_date, is_personal, is_online, loan_status, is_approved \
+                    from loan inner join loan_type using(loan_type_id)
+                    where loan_number in (select loan_number from loan_account
+                                    where account_number in (select account_number from account
+                                                where customer_id = '${req.query.user}'
+                                                        )
+                                            )`
+                            )
         .then((rows) => {
             return res.send({ success: true, data: rows })
         })
