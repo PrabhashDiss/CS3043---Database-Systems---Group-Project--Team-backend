@@ -13,12 +13,9 @@ const get_employee_branch = (req, res, next) => {
 
 const get_fd = (req, res, next) => {
     const data = query(
-        `select account_number,balance*interest_rate*0.01 as interest_amount
-         from account,account_type
-         where account.account_type_id = account_type.account_type_id and account_type = 'fd'
-         order by branch_code`)
+        `CALL GetFD()`)
         .then((rows) => {
-             return res.send(rows)
+             return res.send(rows[0])
         })
 }
 
