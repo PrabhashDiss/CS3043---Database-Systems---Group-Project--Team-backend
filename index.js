@@ -27,7 +27,7 @@ const {
   get_transaction_to,
   get_transaction_latest,
   get_transaction_all,
-  get_loan_payment_due, get_loans_for_customer,
+  get_loan_payment_due_customer, get_loans_for_customer,
 } = require("./controllers/customerController");
 const {add_loan, get_branch} = require("./controllers/commonController");
 const {
@@ -37,6 +37,7 @@ const {
     add_employee,
     approve_loan,
     get_loan_to_be_approved,
+    get_loan_payment_due_manager,
 } = require("./controllers/managerController");
 
 // routes
@@ -107,9 +108,12 @@ app.post("/approveLoan", authorizeRoles(["manager"]), (req, res) => {
 app.get("/getLoanPayment", authorizeRoles(["customer"]), (req, res) => {
   get_loan_payment(req, res);
 });
-app.get("/getLoanPaymentDue", authorizeRoles(["manager"]), (req, res) => {
-    get_loan_payment_due(req, res);
-  });
+app.get("/getLoanPaymentDueManager", authorizeRoles(["manager"]), (req, res) => {
+    get_loan_payment_due_manager(req, res);
+});
+app.get("/getLoanPaymentDueCustomer", authorizeRoles(["customer"]), (req, res) => {
+    get_loan_payment_due_customer(req, res);
+});
 app.post("/addLoanPayment", authorizeRoles(["customer"]), (req, res) => {
     add_loan_payment(req, res);
 });
