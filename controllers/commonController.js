@@ -19,16 +19,33 @@ const add_loan = (req, res, next) => {
              return res.send(rows)
         })
     */
-    const data = query(
-        `INSERT INTO loan(loan_number, branch_code, amount, loan_type_id, loan_duration, start_date, due_date, is_personal, is_online, loan_status, is_approved)
-         VALUES('${req.body.loan_number}', '${req.body.branch_code}', ${req.body.amount}, '${req.body.loan_type_id}', ${req.body.loan_duration}, '${req.body.start_date}', '${req.body.due_date}', ${req.body.is_personal}, ${req.body.is_online}, ${req.body.loan_status}, ${req.body.is_approved});`)
-        .then((rows) => {
-                return res.send({ success: true })
-        })
-        .catch((err) => {
-            console.log(err)
-            return res.send({ success: false })
-        })
+    if(req.body.is_online == 1) {
+        const data = query(
+            `START TRANSACTION; \
+             INSERT INTO loan(loan_number, branch_code, amount, loan_type_id, loan_duration, start_date, due_date, is_personal, is_online, loan_status, is_approved)
+             VALUES('${req.body.loan_number}', '${req.body.branch_code}', ${req.body.amount}, '${req.body.loan_type_id}', ${req.body.loan_duration}, '${req.body.start_date}', '${req.body.due_date}', ${req.body.is_personal}, ${req.body.is_online}, ${req.body.loan_status}, ${req.body.is_approved});
+
+             update account set balance = balance + '${req.body.amount}' where account_number = (select relate_to from account_relate where relate_from = '${req.body.fd_account}'); \
+             COMMIT;`)
+            .then((rows) => {
+                    return res.send({ success: true })
+            })
+            .catch((err) => {
+                console.log(err)
+                return res.send({ success: false })
+            })
+    } else {
+        const data = query(
+            `INSERT INTO loan(loan_number, branch_code, amount, loan_type_id, loan_duration, start_date, due_date, is_personal, is_online, loan_status, is_approved)
+             VALUES('${req.body.loan_number}', '${req.body.branch_code}', ${req.body.amount}, '${req.body.loan_type_id}', ${req.body.loan_duration}, '${req.body.start_date}', '${req.body.due_date}', ${req.body.is_personal}, ${req.body.is_online}, ${req.body.loan_status}, ${req.body.is_approved});`)
+            .then((rows) => {
+                    return res.send({ success: true })
+            })
+            .catch((err) => {
+                console.log(err)
+                return res.send({ success: false })
+            })
+    }
 }
 
 module.exports = {
