@@ -166,11 +166,9 @@ const add_transaction = (req, res, next) => {
 }
 
 const get_loans_for_customer = (req, res, next) => {
-    const data = query(`select round(((base_amount + (base_amount*loan.interest_rate))/loan_duration), 2) as installment,
-loan_number,branch_code, loan_duration,loan.interest_rate,base_amount,start_date,
-due_date,is_personal,is_online,
-loan_status,is_approved
-from loan inner join loan_type using(loan_type_id) where loan_number in (select loan_number from loan_account where account_number = '${req.query.user}')`)
+    const data = query(`select round(((base_amount + (base_amount*loan_type.interest_rate))/loan_duration), 2) as installment, \
+loan_number,branch_code, loan_duration,loan_type.interest_rate,base_amount,start_date, due_date,is_personal,is_online, loan_status,is_approved \
+from loan inner join loan_type using(loan_type_id) where loan_number in (select loan_number from loan_account where account_number in (select account_number from account where customer_id = '${req.query.user}'))`)
         .then((rows) => {
             return res.send({success: true, data: rows})
         })
