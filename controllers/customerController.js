@@ -1,5 +1,4 @@
 const { query } = require('../database/dbConnect')
-const { formatDate } = require('../helpers/formatDate')
 const e = require("express");
 
 const get_customer_info = (req, res, next) => {
@@ -62,7 +61,7 @@ const get_eligible_saving_accounts = (req, res, next) => {
         })
 }
 const get_eligible_fd_accounts = (req, res, next) => {
-    const data = query(`select account_number, balance from account left outer join account_type using(account_type_id) where customer_id = '${req.query.user}' and account_type = 'fd' and balance * 0.6 < 500000;`)
+    const data = query(`select account_number, balance, branch_code from account left outer join account_type using(account_type_id) where customer_id = '${req.query.user}' and account_type = 'fd' and balance * 0.6 < 500000;`)
         .then((rows) => {
             return res.send(rows)
         })
