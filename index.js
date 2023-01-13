@@ -88,9 +88,13 @@ app.post("/addEmployee", authorizeRoles(["manager"]), (req, res) => {
 app.post("/addLoan", authorizeRoles(["customer", "manager"]), (req, res) => {
   add_loan(req, res);
 });
-app.get("/getEligibleFDAccounts", authorizeRoles(["customer"]), (req, res) => {
-  get_eligible_fd_accounts(req, res);
-});
+app.get(
+  "/getEligibleFDAccounts",
+  authorizeRoles(["customer", "manager"]),
+  (req, res) => {
+    get_eligible_fd_accounts(req, res);
+  }
+);
 app.get(
   "/getEligibleSavingAccounts",
   authorizeRoles(["manager"]),
