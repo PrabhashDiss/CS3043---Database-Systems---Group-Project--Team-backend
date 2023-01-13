@@ -50,7 +50,7 @@ app.use("/api/customerRegister", (req, res) => {
 
 app.use(
     "/api/getCustomerInfo",
-    authorizeRoles(["customer", "admin"]),
+    authorizeRoles(["customer", "manager"]),
     (req, res) => {
         get_customer_info(req, res);
     }
@@ -88,7 +88,7 @@ app.post("/addLoan", authorizeRoles(["customer", "manager"]), (req, res) => {
 });
 app.get(
     "/getEligibleFDAccounts",
-    authorizeRoles(["customer"]),
+    authorizeRoles(["manager"]),
     (req, res) => {
         get_eligible_fd_accounts(req, res);
     }
@@ -107,14 +107,14 @@ app.post("/approveLoan", authorizeRoles(["manager"]), (req, res) => {
 app.get("/getLoanPayment", authorizeRoles(["customer"]), (req, res) => {
   get_loan_payment(req, res);
 });
-app.get("/getLoanPaymentDue", authorizeRoles(["customer"]), (req, res) => {
+app.get("/getLoanPaymentDue", authorizeRoles(["manager"]), (req, res) => {
     get_loan_payment_due(req, res);
   });
 app.post("/addLoanPayment", authorizeRoles(["customer"]), (req, res) => {
     add_loan_payment(req, res);
 });
 
-app.get("/getTransactionAll", authorizeRoles(["customer"]), (req, res) => {
+app.get("/getTransactionAll", authorizeRoles(["manager"]), (req, res) => {
     get_transaction_all(req, res);
   });
 app.get("/getTransactionFrom", authorizeRoles(["customer"]), (req, res) => {
