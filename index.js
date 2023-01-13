@@ -96,7 +96,7 @@ app.get(
 );
 app.get(
     "/getEligibleSavingAccounts",
-    authorizeRoles(["customer"]),
+    authorizeRoles(["manager"]),
     (req, res) => {
         get_eligible_saving_accounts(req, res);
     }
