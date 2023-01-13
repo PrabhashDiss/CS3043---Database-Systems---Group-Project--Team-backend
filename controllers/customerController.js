@@ -1,4 +1,5 @@
 const {query} = require('../database/dbConnect')
+const {formatDate} = require('../helpers/formatDate')
 const e = require("express");
 
 const get_customer_info = (req, res, next) => {
@@ -14,7 +15,26 @@ const get_account = (req, res, next) => {
             return res.send(rows)
         })
 }
-const add_account = (req, res, next) => {
+const add_account_fd = (req, res, next) => {
+    const data = query(`
+         START TRANSACTION; \
+         \
+         INSERT INTO account(account_number, customer_id, branch_code, account_type_id, balance, last_active_date, open_date) \
+         VALUES('${req.body.account_number}', '${req.body.customer_id}', '${req.body.branch_code}', '${req.body.account_type_id}', ${req.body.balance}, '${req.body.last_active_date}', '${req.body.open_date}'); \
+         \
+         INSERT INTO account_relate(relate_from, relate_to) \
+         VALUES('${req.body.account_number_from}', '${req.body.account_number_to}'); \
+         \
+         COMMIT;`)
+        .then((rows) => {
+            return res.send({success: true})
+        })
+        .catch((err) => {
+            console.log(err)
+            return res.send({success: false})
+        })
+}
+const add_account_saving = (req, res, next) => {
     /*
     let account = req.body;
     var sql = "SET @AccountNumber = ?;SET @CustomerID = ?;SET @BranchCode = ?;SET @AccountTypeID = ?;SET @Balance = ?;SET @LastActiveDate = ?;SET @OpenDate = ?; \
@@ -35,9 +55,14 @@ const add_account = (req, res, next) => {
             return res.send({success: false})
         })
 }
-
-const get_eligible_loan_accounts = (req, res, next) => {
-    const data = query(`select account_number from account left outer join account_type using(account_type_id) where customer_id = '${req.query.user}' and account_type = 'saving' and balance * 0.6 < 500000;`)
+const get_eligible_saving_accounts = (req, res, next) => {
+    const data = query(`select account_number, balance from account left outer join account_type using(account_type_id) where customer_id = '${req.query.user}' and account_type = 'saving'`)
+        .then((rows) => {
+            return res.send(rows)
+        })
+}
+const get_eligible_fd_accounts = (req, res, next) => {
+    const data = query(`select account_number, balance from account left outer join account_type using(account_type_id) where customer_id = '${req.query.user}' and account_type = 'fd' and balance * 0.6 < 500000;`)
         .then((rows) => {
             return res.send(rows)
         })
@@ -158,11 +183,13 @@ from loan inner join loan_type using(loan_type_id) where loan_number in (select 
 module.exports = {
     get_customer_info,
     get_account,
-    add_account,
+    add_account_fd,
+    add_account_saving,
     add_loan_payment,
     get_loan_payment,
     add_transaction,
-    get_eligible_loan_accounts,
+    get_eligible_saving_accounts,
+    get_eligible_fd_accounts,
     get_transaction_from,
     get_transaction_to,
     get_transaction_latest,
