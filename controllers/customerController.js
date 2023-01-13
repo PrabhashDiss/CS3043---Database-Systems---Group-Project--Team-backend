@@ -90,7 +90,8 @@ const add_loan_payment = (req, res, next) => {
         })
 }
 const get_loan_payment = (req, res, next) => {
-    const data = query(`select loan_number,payment_amount from (select customer_id,loan_number from account natural join loan_account) as k  natural join loan_payment where customer_id = '${req.query.user}'`)
+    const data = query(`select loan_number,payment_amount,payment_date from (select customer_id,loan_number from account natural join loan_account) as k  natural join loan_payment where customer_id = '${req.query.user}'
+                        order by payment_date;`)
         .then((rows) => {
             return res.send(rows)
         })
