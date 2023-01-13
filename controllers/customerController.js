@@ -19,8 +19,8 @@ const add_account_fd = (req, res, next) => {
     const data = query(`
          START TRANSACTION; \
          \
-         INSERT INTO account(account_number, customer_id, branch_code, account_type_id, balance, last_active_date, open_date) \
-         VALUES('${req.body.account_number}', '${req.body.customer_id}', '${req.body.branch_code}', '${req.body.account_type_id}', ${req.body.balance}, '${req.body.last_active_date}', '${req.body.open_date}'); \
+         INSERT INTO account(account_number, customer_id, branch_code, account_type_id, balance, last_active_date, open_date, is_personal) \
+         VALUES('${req.body.account_number}', '${req.body.customer_id}', '${req.body.branch_code}', '${req.body.account_type_id}', ${req.body.balance}, '${req.body.last_active_date}', '${req.body.open_date}', '${req.body.is_personal}'); \
          \
          INSERT INTO account_relate(relate_from, relate_to) \
          VALUES('${req.body.account_number_from}', '${req.body.account_number_to}'); \
@@ -45,8 +45,8 @@ const add_account_saving = (req, res, next) => {
              return res.send(rows)
         })
     */
-    const data = query(`INSERT INTO account(account_number, customer_id, branch_code, account_type_id, balance, last_active_date, open_date) \
-         VALUES('${req.body.account_number}', '${req.body.customer_id}', '${req.body.branch_code}', '${req.body.account_type_id}', ${req.body.balance}, '${req.body.last_active_date}', '${req.body.open_date}');`)
+    const data = query(`INSERT INTO account(account_number, customer_id, branch_code, account_type_id, balance, last_active_date, open_date, is_personal) \
+         VALUES('${req.body.account_number}', '${req.body.customer_id}', '${req.body.branch_code}', '${req.body.account_type_id}', ${req.body.balance}, '${req.body.last_active_date}', '${req.body.open_date}', '${req.body.is_personal}');`)
         .then((rows) => {
             return res.send({success: true})
         })
