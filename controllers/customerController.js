@@ -116,7 +116,7 @@ const get_transaction_latest = (req, res, next) => {
          order by transaction_timestamp desc
          limit 6`)
         .then((rows) => {
-            return res.send(rows)
+            return res.send({rows: rows, req: req.query.account_number})
         })
 }
 const get_transaction_all = (req, res, next) => {
