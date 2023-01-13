@@ -67,7 +67,7 @@ app.get("/getBranch", (req, res) => {
 app.get("/getAccount", authorizeRoles(["customer"]), (req, res) => {
     get_account(req, res);
 });
-app.post("/addAccountFD", authorizeRoles(["customer"]), (req, res) => {
+app.post("/addAccountFD", authorizeRoles(["manager"]), (req, res) => {
     add_account_fd(req, res);
 });
 app.post("/addAccountSaving", authorizeRoles(["customer"]), (req, res) => {
