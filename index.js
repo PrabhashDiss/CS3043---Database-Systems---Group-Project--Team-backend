@@ -15,11 +15,13 @@ const {
 } = require("./controllers/authController");
 const {
   get_customer_info,
-  add_account,
+  add_account_fd,
+  add_account_saving,
   add_loan_payment,
   get_loan_payment,
   add_transaction,
-  get_eligible_loan_accounts,
+  get_eligible_fd_accounts,
+  get_eligible_saving_accounts,
   get_account,
   get_transaction_from,
   get_transaction_to,
@@ -29,6 +31,7 @@ const {
 } = require("./controllers/customerController");
 const {add_loan, get_branch} = require("./controllers/commonController");
 const {
+    get_employee_branch,
     get_fd,
     get_employee,
     add_employee,
@@ -53,6 +56,9 @@ app.use(
     }
 );
 
+app.get("/getEmployeeBranch", (req, res) => {
+    get_employee_branch(req, res);
+});
 app.get("/getBranch", (req, res) => {
     get_branch(req, res);
 });
@@ -60,31 +66,41 @@ app.get("/getBranch", (req, res) => {
 app.get("/getAccount", authorizeRoles(["customer"]), (req, res) => {
     get_account(req, res);
 });
-app.post("/addAccount", authorizeRoles(["customer"]), (req, res) => {
-    add_account(req, res);
+app.post("/addAccountFD", authorizeRoles(["customer"]), (req, res) => {
+    add_account_fd(req, res);
 });
-app.get("/getFD", authorizeRoles(["admin"]), (req, res) => {
+app.post("/addAccountSaving", authorizeRoles(["customer"]), (req, res) => {
+    add_account_saving(req, res);
+});
+app.get("/getFD", authorizeRoles(["manager"]), (req, res) => {
     get_fd(req, res);
 });
 
-app.get("/getEmployee", authorizeRoles(["admin"]), (req, res) => {
+app.get("/getEmployee", authorizeRoles(["manager"]), (req, res) => {
     get_employee(req, res);
 });
-app.post("/addEmployee", authorizeRoles(["admin"]), (req, res) => {
+app.post("/addEmployee", authorizeRoles(["manager"]), (req, res) => {
     add_employee(req, res);
 });
 
-app.post("/addLoan", authorizeRoles(["customer", "admin"]), (req, res) => {
+app.post("/addLoan", authorizeRoles(["customer", "manager"]), (req, res) => {
     add_loan(req, res);
 });
 app.get(
-    "/getEligibleLoanAccounts",
+    "/getEligibleFDAccounts",
     authorizeRoles(["customer"]),
     (req, res) => {
-        get_eligible_loan_accounts(req, res);
+        get_eligible_fd_accounts(req, res);
     }
 );
-app.post("/approveLoan", authorizeRoles(["admin"]), (req, res) => {
+app.get(
+    "/getEligibleSavingAccounts",
+    authorizeRoles(["customer"]),
+    (req, res) => {
+        get_eligible_saving_accounts(req, res);
+    }
+);
+app.post("/approveLoan", authorizeRoles(["manager"]), (req, res) => {
     approve_loan(req, res);
 });
 
@@ -114,7 +130,7 @@ app.post("/addTransaction", authorizeRoles(["customer"]), (req, res) => {
     add_transaction(req, res);
 });
 
-app.get('/getLoanToBeApproved', authorizeRoles(['customer', 'manager']), (req, res) => {
+app.get('/getLoanToBeApproved', authorizeRoles(['manager']), (req, res) => {
     get_loan_to_be_approved(req, res)
 })
 app.get('/getLoanForecast', authorizeRoles(['customer', 'manager']), (req, res) => {
